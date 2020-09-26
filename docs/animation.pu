@@ -1,27 +1,28 @@
 @startuml
 class Animation {
     {field} fps
+    {field} current_frame
+    {method} update()
+    {method} draw()
+    {method} get_current_frame()
+    {method} next_frame()
 }
 
 class Frame {
+    {field} width
+    {field} height
     {field} bgcolor
+    {method} get_image()
+    {method} draw()
 }
 
-class Action
-
-class Stroke {
-    {field} array
-}
-
-class BrushStroke {
+class Brush {
+    {field} size
     {field} color
+    {method} press()
+    {method} move()
 }
-
-class EraserStroke
 
 Animation -* Frame
-Frame -* Action
-Action <- Stroke
-Stroke <- BrushStroke
-Stroke <- EraserStroke
+Brush -- Frame : draw on >
 @enduml
