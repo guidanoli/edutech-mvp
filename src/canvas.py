@@ -6,11 +6,13 @@ import core
 
 import os
 
+if not pygame.font: print('Warning, fonts disabled')
+
 main_dir = os.path.split(os.path.abspath(__file__))[0]
 data_dir = os.path.join(main_dir, '..', 'data')
 
-# functions to create our resources
 def load_image(name, colorkey=None):
+    """Loads image and returns image and its rectangle"""
     fullname = os.path.join(data_dir, name)
     try:
         image = pygame.image.load(fullname)
@@ -80,6 +82,7 @@ def main():
     brush = core.Brush(brush_size, brush_color)
 
     def add_new_frame():
+        """Create new frame"""
         screen_size = screen.get_size()
         bgcolor = (255, 255, 255) # White
         animation.add_frame(core.Frame(*screen_size, bgcolor))
@@ -88,9 +91,27 @@ def main():
     animation = core.Animation()
     add_new_frame()
 
+    # Prepare font
+    if pygame.font:
+        font = pygame.font.Font(None, 36)
+
+    def new_frame_text(current_frame, frame_cnt):
+        """Create new Surface with current frame text rendered"""
+        txt = f"{current_frame}/{frame_cnt}"
+        frame_surf = font.render(txt, 1, (10, 10, 10))
+        frame_rect = frame_surf.get_rect(left=10, top=10)
+        return frame_surf, frame_rect
+
+    # Prepare frame text
+    if pygame.font:
+        frame_surf, frame_rect = new_frame_text(1, 1)
+    else:
+        frame_surf = None
+
     # Group sprites
     allsprites = pygame.sprite.RenderPlain((play_stop_btn, next_btn, prev_btn))
 
+    # State
     drawing = False
     playing = False
 
@@ -100,10 +121,10 @@ def main():
 
         frame = animation.get_current_frame()
         img = frame.get_image()
-        pos = pygame.mouse.get_pos()
 
         # Handle Input Events
         for event in pygame.event.get():
+            pos = pygame.mouse.get_pos()
             if event.type == QUIT:
                 going = False
             elif event.type == KEYDOWN and event.key == K_ESCAPE:
@@ -111,16 +132,23 @@ def main():
             elif event.type == MOUSEBUTTONDOWN:
                 if play_stop_btn.rect.collidepoint(pos):
                     playing = not playing
+                    if playing:
+                        allsprites.remove(next_btn, prev_btn)
+                        drawing = False
+                    else:
+                        allsprites.add(next_btn, prev_btn)
                     play_stop_btn.set_is_playing(playing)
-                elif next_btn.rect.collidepoint(pos) and not playing:
-                    if animation.get_current_frame_index() == animation.get_frame_count() - 1:
-                        add_new_frame()
-                    animation.next_frame()
-                elif prev_btn.rect.collidepoint(pos) and not playing:
-                    animation.prev_frame()
                 else:
-                    drawing = True
-                    brush.press(*pos)
+                    if not playing:
+                        if next_btn.rect.collidepoint(pos):
+                            if animation.get_current_frame_index() == animation.get_frame_count() - 1:
+                                add_new_frame()
+                            animation.next_frame()
+                        elif prev_btn.rect.collidepoint(pos):
+                            animation.prev_frame()
+                        else:
+                            drawing = True
+                            brush.press(*pos)
             elif event.type == MOUSEBUTTONUP:
                 if drawing:
                     drawing = False
@@ -133,6 +161,12 @@ def main():
         allsprites.update()
         animation.draw(screen)
         allsprites.draw(screen)
+
+        if frame_surf:
+            screen.blit(frame_surf, frame_rect)
+            current_frame = animation.get_current_frame_index() + 1
+            frame_cnt = animation.get_frame_count()
+            frame_surf, frame_rect = new_frame_text(current_frame, frame_cnt)
 
         pygame.display.flip()
 
