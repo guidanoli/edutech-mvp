@@ -11,13 +11,16 @@ The UML diagram is in `docs/animation.pu`. Just paste it in [LiveUML](https://li
 
 * Python 3.8 or earlier
 * Python packages listed in `requirements.txt`
-  * Just run `pip install -r requirements.txt`
+
+## Running
+
+```sh
+$ python -m pip install -r requirements.txt
+$ python src/canvas.py
+```
 
 ## Todo
 
-* Draw on canvas (in multiple colours, if possible)
+* Change brush color
 * Erase, undo and redo commands
-* Storing frames in memory
-* Current frame selection
-* Play animation
 * Export/import functionality
