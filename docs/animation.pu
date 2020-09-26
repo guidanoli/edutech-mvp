@@ -1,0 +1,27 @@
+@startuml
+class Animation {
+    {field} fps
+}
+
+class Frame {
+    {field} bgcolor
+}
+
+class Action
+
+class Stroke {
+    {field} map
+}
+
+class BrushStroke {
+    {field} color
+}
+
+class EraserStroke
+
+Animation -* Frame
+Frame -* Action
+Action <- Stroke
+Stroke <- BrushStroke
+Stroke <- EraserStroke
+@enduml
