@@ -18,8 +18,3 @@ The UML diagram is in `docs/animation.pu`. Just paste it in [LiveUML](https://li
 $ python -m pip install -r requirements.txt
 $ python src/canvas.py
 ```
-
-## To do list
-
-* Undo and redo commands
-* Export/import functionality

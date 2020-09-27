@@ -1,3 +1,4 @@
 pygame>=1.9.6
 numpy>=1.19.0
 scikit-image>=0.17.2
+jsonpickle>=1.4.1

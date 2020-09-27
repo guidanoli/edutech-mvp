@@ -3,10 +3,41 @@ import os
 import pygame
 from pygame.locals import *
 
+import jsonpickle
+
+from tkinter import filedialog, Tk
+
+from pathlib import Path
+
 import core
 
 main_dir = os.path.split(os.path.abspath(__file__))[0]
 data_dir = os.path.join(main_dir, '..', 'data')
+
+def save_animation(animation):
+    """Save animation"""
+    root = Tk()
+    root.withdraw()
+    root.filename =  filedialog.asksaveasfilename( \
+        initialdir = Path.home(), title = "Salvar animação",
+        filetypes = (("Projeto","*.prj"),))
+    if not root.filename:
+        return False
+    with open(root.filename, "w+") as file_pointer:
+        file_pointer.write(jsonpickle.encode(animation))
+        return True
+
+def load_animation():
+    """Load animation"""
+    root = Tk()
+    root.withdraw()
+    root.filename =  filedialog.askopenfilename( \
+        initialdir = Path.home(), title = "Abrir animação",
+        filetypes = (("Projeto","*.prj"),))
+    if not root.filename:
+        return None
+    with open(root.filename, "r") as file_pointer:
+        return jsonpickle.decode(file_pointer.read())
 
 def load_image(name, colorkey=None):
     """Loads image and returns image and its rectangle"""
@@ -214,6 +245,12 @@ def main():
                     if animation.get_frame_count() > 1:
                         frame_idx = animation.get_current_frame_index()
                         animation.remove_frame_at(frame_idx)
+                elif event.key == K_s:
+                    save_animation(animation)
+                elif event.key == K_o:
+                    tmp_animation = load_animation()
+                    if tmp_animation:
+                        animation = tmp_animation
             elif event.type == MOUSEBUTTONDOWN:
                 if helping:
                     helping = False
