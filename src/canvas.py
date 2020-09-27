@@ -129,7 +129,7 @@ def main():
     brush_min_size = 1
     brush_max_size = 10
     brush_color = (0, 0, 0)
-    brush = core.Brush(brush_min_size, brush_color)
+    brush = core.Brush(2, brush_color)
 
     def add_new_frame():
         """Create new frame"""
@@ -208,6 +208,12 @@ def main():
                         color_history.append(color_history.pop(-2))
                         new_color = palette.get_color_dict()[color_history[-1]]
                         brush.set_color(new_color)
+                elif event.key == K_a:
+                    frame.clean()
+                elif event.key == K_e:
+                    if animation.get_frame_count() > 1:
+                        frame_idx = animation.get_current_frame_index()
+                        animation.remove_frame_at(frame_idx)
             elif event.type == MOUSEBUTTONDOWN:
                 if helping:
                     helping = False
@@ -234,8 +240,8 @@ def main():
                         animation.prev_frame()
                     elif palette.rect.collidepoint(pos):
                         palette.next_color()
-                        current_color = palette.get_current_color()
-                        brush.set_color(current_color)
+                        brush_color = palette.get_current_color()
+                        brush.set_color(brush_color)
                     elif help_btn.rect.collidepoint(pos):
                         helping = True
                         help_screen.reset_animation()

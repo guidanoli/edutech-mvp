@@ -9,7 +9,7 @@ class Animation:
     def get_fps(self):
         """Get frames per second"""
         return self.fps
-    
+
     def set_fps(self, fps):
         """Set frames per second"""
         self.fps = fps
@@ -21,7 +21,7 @@ class Animation:
     def get_frame_count(self):
         """Gets number of frames"""
         return len(self.frames)
-    
+
     def prev_frame(self):
         """Set the current frame to the previous frame"""
         self.set_current_frame((self.current_frame - 1) % self.get_frame_count())
@@ -34,9 +34,9 @@ class Animation:
         """Get current frame"""
         return self.get_frame_at(self.current_frame)
 
-    def set_current_frame(self, f):
+    def set_current_frame(self, frame):
         """Set current frame"""
-        self.current_frame = f
+        self.current_frame = frame
 
     def get_current_frame_index(self):
         """Get current frame index"""
@@ -47,8 +47,12 @@ class Animation:
         return self.frames[i]
 
     def remove_frame_at(self, i):
-        """Remove frame at index"""
-        return self.frames.pop(i)
+        """Remove frame at index
+        Assumes there are at least two frames
+        """
+        self.frames.pop(i)
+        if self.current_frame == i:
+            self.set_current_frame(max(0, i-1))
 
     def update(self):
         """Updates animation"""
