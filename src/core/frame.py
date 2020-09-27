@@ -6,7 +6,7 @@ class Frame:
 
     def __init__(self, width, height, bgcolor):
         self.bgcolor = bgcolor
-        self.img = np.zeros((width, height, 3), np.int32)
+        self.img = np.zeros((width, height, 3), np.int8)
         self.img[:,:] = bgcolor
 
     def get_image(self):
@@ -16,3 +16,4 @@ class Frame:
     def draw(self, canvas):
         """Draw on canvas"""
         surfarray.blit_array(canvas, self.img)
+        

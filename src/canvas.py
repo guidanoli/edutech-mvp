@@ -76,6 +76,9 @@ def main():
     next_btn = NextButton()
     prev_btn = PrevButton()
 
+    # Prepare palette
+    palette = core.Palette()
+
     # Prepare brush
     brush_size = 1
     brush_color = (0, 0, 0)
@@ -97,7 +100,7 @@ def main():
 
     def new_frame_text(current_frame, frame_cnt):
         """Create new Surface with current frame text rendered"""
-        txt = f"{current_frame}/{frame_cnt}"
+        txt = f"Frame {current_frame} de {frame_cnt}"
         frame_surf = font.render(txt, 1, (10, 10, 10))
         frame_rect = frame_surf.get_rect(left=10, top=10)
         return frame_surf, frame_rect
@@ -109,7 +112,8 @@ def main():
         frame_surf = None
 
     # Group sprites
-    allsprites = pygame.sprite.RenderPlain((play_stop_btn, next_btn, prev_btn))
+    allsprites = pygame.sprite.RenderPlain( \
+        (play_stop_btn, next_btn, prev_btn))
 
     # State
     drawing = False
@@ -118,7 +122,8 @@ def main():
     # Main loop
     going = True
     while going:
-
+        
+        # Get current frame and image
         frame = animation.get_current_frame()
         img = frame.get_image()
 
@@ -141,11 +146,16 @@ def main():
                 else:
                     if not playing:
                         if next_btn.rect.collidepoint(pos):
-                            if animation.get_current_frame_index() == animation.get_frame_count() - 1:
+                            if animation.get_current_frame_index() == \
+                                    animation.get_frame_count() - 1:
                                 add_new_frame()
                             animation.next_frame()
                         elif prev_btn.rect.collidepoint(pos):
                             animation.prev_frame()
+                        elif palette.rect.collidepoint(pos):
+                            palette.next_color()
+                            brush_color = palette.get_current_color()
+                            brush.set_color(brush_color)
                         else:
                             drawing = True
                             brush.press(*pos)
@@ -153,23 +163,34 @@ def main():
                 if drawing:
                     drawing = False
                     brush.move(img, *pos)
+            elif event.type == MOUSEMOTION:
+                if drawing:
+                    brush.move(img, *pos)
 
-        if drawing:
-            brush.move(img, *pos)
-
+        # Update animation and sprites
         animation.update()
         allsprites.update()
+
+        # Draw animation
         animation.draw(screen)
+
+        # Draw additional sprites
         allsprites.draw(screen)
 
+        if not playing:
+            palette.draw(screen)
+
+        # Draw current frame
         if frame_surf:
             screen.blit(frame_surf, frame_rect)
             current_frame = animation.get_current_frame_index() + 1
             frame_cnt = animation.get_frame_count()
             frame_surf, frame_rect = new_frame_text(current_frame, frame_cnt)
 
+        # Flip buffers
         pygame.display.flip()
 
+        # Manage animation
         if playing:
             animation.next_frame()
             clock.tick(animation.get_fps())
