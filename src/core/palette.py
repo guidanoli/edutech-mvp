@@ -41,7 +41,7 @@ class Palette:
         center = (screen_rect.width - margin, margin)
         # Border
         pygame.draw.circle(screen, (0, 0, 0), center, \
-            radius + border_thickness, border_thickness)
+            radius + border_thickness)
         # Inner color
         self.rect = pygame.draw.circle(screen, color, center, radius)
 
