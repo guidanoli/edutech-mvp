@@ -168,6 +168,7 @@ def main():
     drawing = False
     playing = False
     helping = False
+    color_history = [palette.get_current_color_name()]
 
     # Main loop
     going = True
@@ -201,6 +202,12 @@ def main():
                     fps = animation.get_fps()
                     if fps > min_fps:
                         animation.set_fps(fps - 1)
+                elif event.key == K_u:
+                    if len(color_history) > 1:
+                        palette.set_current_color_by_name(color_history[-2])
+                        color_history.append(color_history.pop(-2))
+                        new_color = palette.get_color_dict()[color_history[-1]]
+                        brush.set_color(new_color)
             elif event.type == MOUSEBUTTONDOWN:
                 if helping:
                     helping = False
@@ -227,14 +234,17 @@ def main():
                         animation.prev_frame()
                     elif palette.rect.collidepoint(pos):
                         palette.next_color()
-                        brush_color = palette.get_current_color()
-                        brush.set_color(brush_color)
+                        current_color = palette.get_current_color()
+                        brush.set_color(current_color)
                     elif help_btn.rect.collidepoint(pos):
                         helping = True
                         help_screen.reset_animation()
                         allsprites.add(help_screen)
                     else:
                         drawing = True
+                        current_color = palette.get_current_color_name()
+                        if current_color != color_history[-1]:
+                            color_history = color_history[-1:] + [current_color]
                         brush.press(*pos)
             elif event.type == MOUSEBUTTONUP:
                 if drawing:
