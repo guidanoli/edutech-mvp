@@ -1,4 +1,4 @@
-# MVP for EduTech (PUC Hack 2020)
+# Stop Motion Prototype for EduTech (PUC Hack 2020)
 
 This is a project for the PUC Hack 2020 hackathon that is taking place in an online fashion.
 This code is licensed under LGPLv3, the same as pygame.
@@ -19,8 +19,7 @@ $ python -m pip install -r requirements.txt
 $ python src/canvas.py
 ```
 
-## Todo
+## To do list
 
-* Change brush color
-* Erase, undo and redo commands
+* Undo and redo commands
 * Export/import functionality
