@@ -1,7 +1,7 @@
 class Animation:
     """Represents an animation"""
 
-    def __init__(self, fps=2):
+    def __init__(self, fps):
         self.fps = fps
         self.current_frame = 0
         self.frames = []
@@ -9,6 +9,10 @@ class Animation:
     def get_fps(self):
         """Get frames per second"""
         return self.fps
+    
+    def set_fps(self, fps):
+        """Set frames per second"""
+        self.fps = fps
 
     def add_frame(self, frame):
         """Adds frame"""

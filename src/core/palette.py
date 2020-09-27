@@ -2,6 +2,7 @@ import pygame
 
 class Palette:
     """Color palette for brush"""
+
     def __init__(self):
         self.colors = {
             "black": (0, 0, 0),
@@ -19,6 +20,10 @@ class Palette:
     def get_colors(self):
         """Get supported colors"""
         return self.colors
+
+    def get_color_list(self):
+        """Get color list sorted lexicographically"""
+        return sorted(self.colors.keys())
 
     def set_current_color(self, color):
         """Set current color"""
@@ -47,7 +52,7 @@ class Palette:
 
     def next_color(self):
         """Set next color in the palette"""
-        color_list = list(self.colors.keys())
+        color_list = self.get_color_list()
         color_index = color_list.index(self.current_color)
         next_color_index = (color_index + 1) % len(color_list)
         self.set_current_color(color_list[next_color_index])
