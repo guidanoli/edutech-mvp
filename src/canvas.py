@@ -1,12 +1,11 @@
 """Stop Motion Prototype"""
 
 import os
+from pathlib import Path
+from tkinter import filedialog, Tk
 
 import pygame
 
-from tkinter import filedialog, Tk
-
-from pathlib import Path
 import core
 
 main_dir = os.path.split(os.path.abspath(__file__))[0]

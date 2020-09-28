@@ -62,4 +62,3 @@ class Palette:
         color_index = color_list.index(self.current_color)
         next_color_index = (color_index + 1) % len(color_list)
         self.set_current_color_by_name(color_list[next_color_index])
-

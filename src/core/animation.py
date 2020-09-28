@@ -72,7 +72,7 @@ class Animation:
     def _get_project_info_path(prj_folder):
         """Get project info file path"""
         return Path(prj_folder) / "project.json"
-    
+
     @staticmethod
     def _get_frame_file_path(prj_folder, frame_index):
         """Get frame file path"""
