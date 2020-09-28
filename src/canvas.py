@@ -3,8 +3,6 @@ import os
 import pygame
 from pygame.locals import *
 
-import jsonpickle
-
 from tkinter import filedialog, Tk
 
 from pathlib import Path
