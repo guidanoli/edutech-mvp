@@ -20,4 +20,16 @@ class Frame:
     def draw(self, canvas):
         """Draw on canvas"""
         surfarray.blit_array(canvas, self.img)
-        
+
+    def serialize(self, file):
+        """Serialize to binary file"""
+        np.savez_compressed(file, **self.__dict__)
+
+    @staticmethod
+    def deserialize(file):
+        """Deserialize from binary file"""
+        data = np.load(file + ".npz")
+        frame = Frame.__new__(Frame)
+        for key, value in data.items():
+            setattr(frame, key, value)
+        return frame

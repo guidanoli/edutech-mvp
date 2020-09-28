@@ -1,3 +1,7 @@
+from .frame import Frame
+from pathlib import Path
+import json
+
 class Animation:
     """Represents an animation"""
 
@@ -60,3 +64,43 @@ class Animation:
     def draw(self, screen):
         """Draws animation"""
         self.get_current_frame().draw(screen)
+
+    @staticmethod
+    def _get_project_info_path(prj_folder):
+        """Get project info file path"""
+        return Path(prj_folder) / "project.json"
+    
+    @staticmethod
+    def _get_frame_file_path(prj_folder, frame_index):
+        """Get frame file path"""
+        return Path(prj_folder) / f"frame_{frame_index}"
+
+    def serialize(self, prj_folder):
+        """Serialize animation to project folder"""
+        prj_info = self.__dict__.copy()
+        prj_info.pop("frames")
+        prj_info["frame_count"] = self.get_frame_count()
+        prj_info_filepath = Animation._get_project_info_path(prj_folder)
+        with open(prj_info_filepath, 'w') as prj_info_file:
+            prj_info_file.write(json.dumps(prj_info,
+                indent=4, sort_keys=True))
+        for i, frame in enumerate(self.frames):
+            frames_filepath = Animation._get_frame_file_path(prj_folder, i)
+            frame.serialize(str(frames_filepath))
+
+    @staticmethod
+    def deserialize(prj_folder):
+        """Deserialize animation from project folder"""
+        animation = Animation.__new__(Animation)
+        prj_info_filepath = Animation._get_project_info_path(prj_folder)
+        with open(prj_info_filepath, 'r') as prj_info_file:
+            data = json.load(prj_info_file)
+            frame_count = data.pop('frame_count')
+            for key, value in data.items():
+                setattr(animation, key, value)
+        animation.frames = []
+        for i in range(frame_count):
+            frame_filepath = Animation._get_frame_file_path(prj_folder, i)
+            frame = Frame.deserialize(str(frame_filepath))
+            animation.frames.append(frame)
+        return animation

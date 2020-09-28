@@ -18,26 +18,31 @@ def save_animation(animation):
     """Save animation"""
     root = Tk()
     root.withdraw()
-    root.filename =  filedialog.asksaveasfilename( \
-        initialdir = Path.home(), title = "Salvar animação",
-        filetypes = (("Projeto","*.prj"),))
-    if not root.filename:
+
+    root.directory =  filedialog.askdirectory( \
+        initialdir=Path.home(),
+        title="Salvar projeto",
+        mustexist=True)
+
+    if not root.directory:
         return False
-    with open(root.filename, "w+") as file_pointer:
-        file_pointer.write(jsonpickle.encode(animation))
-        return True
+
+    animation.serialize(root.directory)
 
 def load_animation():
     """Load animation"""
     root = Tk()
     root.withdraw()
-    root.filename =  filedialog.askopenfilename( \
-        initialdir = Path.home(), title = "Abrir animação",
-        filetypes = (("Projeto","*.prj"),))
-    if not root.filename:
-        return None
-    with open(root.filename, "r") as file_pointer:
-        return jsonpickle.decode(file_pointer.read())
+
+    root.directory =  filedialog.askdirectory( \
+        initialdir=Path.home(),
+        title="Abrir projeto",
+        mustexist=True)
+
+    if not root.directory:
+        return False
+
+    return core.Animation.deserialize(root.directory)
 
 def load_image(name, colorkey=None):
     """Loads image and returns image and its rectangle"""
