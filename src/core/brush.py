@@ -1,3 +1,5 @@
+"""Defines the Brush class"""
+
 from skimage.draw import line, disk
 
 class Brush:

@@ -1,3 +1,5 @@
+"""Defines the Frame class"""
+
 from pygame import surfarray
 import numpy as np
 

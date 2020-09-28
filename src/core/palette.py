@@ -1,3 +1,5 @@
+"""Defines the Palette class"""
+
 import pygame
 
 class Palette:

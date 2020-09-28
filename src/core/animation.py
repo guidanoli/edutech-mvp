@@ -1,6 +1,9 @@
-from .frame import Frame
+"""Defines the Animation class"""
+
 from pathlib import Path
 import json
+
+from .frame import Frame
 
 class Animation:
     """Represents an animation"""

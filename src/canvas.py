@@ -1,12 +1,12 @@
+"""Stop Motion Prototype"""
+
 import os
 
 import pygame
-from pygame.locals import *
 
 from tkinter import filedialog, Tk
 
 from pathlib import Path
-
 import core
 
 main_dir = os.path.split(os.path.abspath(__file__))[0]
@@ -56,7 +56,7 @@ def load_image(name, colorkey=None):
     if colorkey is not None:
         if colorkey == -1:
             colorkey = image.get_at((0, 0))
-        image.set_colorkey(colorkey, RLEACCEL)
+        image.set_colorkey(colorkey, pygame.RLEACCEL)
     return image, image.get_rect()
 
 class HelpScreen(pygame.sprite.Sprite):
@@ -90,6 +90,7 @@ class HelpScreen(pygame.sprite.Sprite):
 
 class HelpButton(pygame.sprite.Sprite):
     """Button to get help"""
+
     def __init__(self):
         pygame.sprite.Sprite.__init__(self) #call Sprite initializer
         self.image, self.rect = load_image("help.png", -1)
@@ -100,6 +101,7 @@ class HelpButton(pygame.sprite.Sprite):
 
 class NextButton(pygame.sprite.Sprite):
     """Button to go to the next frame"""
+
     def __init__(self):
         pygame.sprite.Sprite.__init__(self) #call Sprite initializer
         self.image, self.rect = load_image("next.gif", -1)
@@ -110,6 +112,7 @@ class NextButton(pygame.sprite.Sprite):
 
 class PrevButton(pygame.sprite.Sprite):
     """Button to go to the previous frame"""
+
     def __init__(self):
         pygame.sprite.Sprite.__init__(self) #call Sprite initializer
         self.image, self.rect = load_image("prev.gif", -1)
@@ -120,12 +123,15 @@ class PrevButton(pygame.sprite.Sprite):
 
 class PlayStopButton(pygame.sprite.Sprite):
     """Button to play/stop animation"""
+
     def __init__(self):
         pygame.sprite.Sprite.__init__(self) #call Sprite initializer
         self.play_img, _ = load_image("play.gif", -1)
         self.stop_img, _ = load_image("stop.gif", -1)
         self.set_is_playing(False)
+
     def set_is_playing(self, is_playing):
+        """Set current sprite (play or stop)"""
         if is_playing:
             self.image = self.stop_img
         else:
@@ -207,7 +213,7 @@ def main():
     # Main loop
     going = True
     while going:
-        
+
         # Get current frame and image
         frame = animation.get_current_frame()
         img = frame.get_image()
@@ -215,46 +221,44 @@ def main():
         # Handle Input Events
         for event in pygame.event.get():
             pos = pygame.mouse.get_pos()
-            if event.type == QUIT:
+            if event.type == pygame.QUIT:
                 going = False
-            elif event.type == KEYDOWN:
-                if event.key == K_ESCAPE:
-                    going = False
-                elif event.key == K_g:
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_g:
                     brush_size = brush.get_size()
                     if brush_size < brush_max_size:
                         brush.set_size(brush_size + 1)
-                elif event.key == K_f:
+                elif event.key == pygame.K_f:
                     brush_size = brush.get_size()
                     if brush_size > brush_min_size:
                         brush.set_size(brush_size - 1)
-                elif event.key == K_r:
+                elif event.key == pygame.K_r:
                     fps = animation.get_fps()
                     if fps < max_fps:
                         animation.set_fps(fps + 1)
-                elif event.key == K_d:
+                elif event.key == pygame.K_d:
                     fps = animation.get_fps()
                     if fps > min_fps:
                         animation.set_fps(fps - 1)
-                elif event.key == K_u:
+                elif event.key == pygame.K_u:
                     if len(color_history) > 1:
                         palette.set_current_color_by_name(color_history[-2])
                         color_history.append(color_history.pop(-2))
                         new_color = palette.get_color_dict()[color_history[-1]]
                         brush.set_color(new_color)
-                elif event.key == K_a:
+                elif event.key == pygame.K_a:
                     frame.clean()
-                elif event.key == K_e:
+                elif event.key == pygame.K_e:
                     if animation.get_frame_count() > 1:
                         frame_idx = animation.get_current_frame_index()
                         animation.remove_frame_at(frame_idx)
-                elif event.key == K_s:
+                elif event.key == pygame.K_s:
                     save_animation(animation)
-                elif event.key == K_o:
+                elif event.key == pygame.K_o:
                     tmp_animation = load_animation()
                     if tmp_animation:
                         animation = tmp_animation
-            elif event.type == MOUSEBUTTONDOWN:
+            elif event.type == pygame.MOUSEBUTTONDOWN:
                 if helping:
                     helping = False
                     allsprites.remove(help_screen)
@@ -292,11 +296,11 @@ def main():
                         if current_color != color_history[-1]:
                             color_history = color_history[-1:] + [current_color]
                         brush.press(*pos)
-            elif event.type == MOUSEBUTTONUP:
+            elif event.type == pygame.MOUSEBUTTONUP:
                 if drawing:
                     drawing = False
                     brush.move(img, *pos)
-            elif event.type == MOUSEMOTION:
+            elif event.type == pygame.MOUSEMOTION:
                 if drawing:
                     brush.move(img, *pos)
 

@@ -1,28 +1,31 @@
-@startuml
+@startuml animation
+
 class Animation {
     {field} fps
-    {field} current_frame
-    {method} update()
-    {method} draw()
-    {method} get_current_frame()
-    {method} next_frame()
 }
 
 class Frame {
-    {field} width
-    {field} height
-    {field} bgcolor
-    {method} get_image()
-    {method} draw()
+    {field} img
 }
 
 class Brush {
     {field} size
-    {field} color
-    {method} press()
-    {method} move()
 }
 
-Animation -* Frame
-Brush -- Frame : draw on >
+class Position {
+    {field} x
+    {field} y
+}
+
+class Color {
+    {field} name
+    {field} rgb
+}
+
+Animation -* Frame : is constituted of >
+Animation -- Frame : is current of <
+Frame -- Color : is background color of <
+Brush -- Position : was last pressed at >
+Brush -- Color : is current color of <
+
 @enduml
